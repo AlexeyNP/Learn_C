@@ -2,10 +2,13 @@
 
 int main()
 {
-	int a, sqr;
+	int a, i;
 	scanf("%d/n", &a);
-	for(int i=a, i>=0, i--)
+	for(i = 1; i <= a; i++)
 	{
-		int sqr, qdr;
-			
+		int kvadr, kub;
+		kvadr = i * i;
+		kub = i * i * i;
+		printf("%d\t%d\t%d\n", i, kvadr, kub);
+	}
 }
