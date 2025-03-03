@@ -1,10 +1,10 @@
 #include <stdio.h>
+#include <math.h>
 
-int main(void)
+int main ()
 {
-   int c;
-   while ((c=getchar()) != '\n')
-       if(c <= 0)
-           putchar(c);
-   return 0;
+    int c;
+    scanf("%d", &c);
+    printf("%.0f", fabs(c));
+    return 0;
 }
