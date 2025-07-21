@@ -12,14 +12,23 @@ int Input(int arr[], int n)
     return i;
 }
 
-void SwapArr(int *arr,int i,int j)
+void print(int arr[], int n)
+{
+    int i;
+    for(i=0;i<n;i++)
+    printf("%d ",arr[i]);
+    printf("\n");
+}
+
+
+void SwapArr(int arr[],int i,int j)
 {
  int temp = arr[i];
  arr[i] = arr[j];
  arr[j] = temp;
 }
 
-void BubbleSort(int* arr, int n)
+void BubbleSort(int arr[], int n)
 {
     int noSwap;
     for(int i=n-1; i>=0; i--)
@@ -33,16 +42,19 @@ void BubbleSort(int* arr, int n)
                     noSwap = 0;
                 }
         }
+        if(noSwap)
+        break;
     }
-    printf("%d\n", arr[2] + arr[3]);
-    //if(noSwap)
-    //break;
 }
 
 int main()
 {
-    int arr[SIZE];
-    Input(&arr[0], SIZE);
+    int arr[SIZE] = {4, -5, 3, 10, -4, -6, 8, -10, 1, 0};
+    //Input(&arr[0], SIZE);
     BubbleSort(arr, SIZE);
-    //printf("%d\n",BubbleSort(arr,SIZE));
+    print(arr, SIZE);
+    //printf("%d\n", arr[SIZE]);
+    printf("%d\n", arr[8]);
+    printf("%d\n", arr[9]);
+    printf("%d", arr[8]+arr[9]);
 }
