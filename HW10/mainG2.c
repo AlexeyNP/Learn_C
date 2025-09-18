@@ -1,29 +1,41 @@
 #include <stdio.h>
-#define SIZE 20
+#define SIZE 26
 
 int main()
 {
-    FILE *f;
-    FILE *of;
-    int n;
-    unsigned int digit;
-    //char s;
-    f = fopen("inputg2.txt", "r"); // режим чтения
-    of = fopen("outputg2.txt", "w"); // режим записи
-    fscanf(f, "%d", digit);
-    while (digit < 27)
+    FILE *in_f;
+    FILE *out_f = fopen("output.txt", "w"); // режим записи;
+    int n = 65;
+    //int d = 9;
+    int schet = 2;
+    int digit;
+    if ( ( in_f = fopen("input.txt", "r") ) == NULL)
     {
-        for(int i = 1; i < digit; i++)
+        puts ( "NULL");
+    }
+    else
+    {
+        fscanf ( in_f, "%d", &digit );
+        for(int i = 1; i <= digit; i++)
         {
             if((i % 2) != 0)
             {
-                fprintf (of, "%d", n);
+                fprintf (out_f, "%c", n);
                 n++;
             }
+            else if ( schet < 9 )
+            {
+                fprintf (out_f, "%d", schet);
+                schet += 2;
+            }
             else
-            fprintf (of, "%c", 65);
+            {
+                schet = 2;
+                fprintf (out_f, "%d", schet);
+                schet += 2;
+            }
         }
     }
-    fclose (f);
-    fclose (of);
+    fclose (in_f);
+    fclose (out_f);
 }

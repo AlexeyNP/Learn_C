@@ -1,23 +1,23 @@
 #include <stdio.h>
-#define SIZE 20
+#include <string.h>
+#define SIZE 110
 
 int main()
 {
-    FILE *f;
-    FILE *of;
-    int n;
+    FILE *f = fopen("input.txt", "r"); // режим чтения;
+    FILE *of = fopen("output.txt", "w"); // режим записи;
     char s[SIZE];
-    f = fopen("input.txt", "r"); // режим чтения
-    of = fopen("output.txt", "w"); // режим записи
-    while ( !feof(f)) {
-        fscanf( f, "%s", s );
-        fprintf (of, "%s", s);
-        for( n = 1; n < 3; n++ )
-        fprintf (of, ", %s", s);
+    //while ( !feof(f)) {
+        fgets( s, SIZE, f );
+        //fprintf (of, "%s, %s, %s", s, s, s);
+    //}
+    int len = strlen(s);
+    if (len > 0 && s[len - 1] == '\n') {
+        s[len - 1] = '\0';
+        len--;
     }
-    fprintf (of, " %d", n);
+    fprintf (of, "%s, %s, %s", s, s, s);
+    fprintf (of, " %d", len);
     fclose (f);
     fclose (of);
 }
-// После сканирования и записи в массив S нужно посчитать размер массива и 
-// в качестве условия для FOR ипользовать этот размер.
