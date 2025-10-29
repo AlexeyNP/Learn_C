@@ -6,7 +6,8 @@
 #define SIZE 30
 
 #pragma pack(push, 1)
-typedef struct sensor {
+typedef struct sensor
+{
     uint8_t second;
     uint8_t minute;
     uint8_t hour;
@@ -20,7 +21,7 @@ typedef struct sensor {
 // Функции для работы с данными
 void AddRecord(str_sensor info[], size_t number, uint16_t year, uint8_t month, uint8_t day, uint8_t hour, uint8_t minute, uint8_t second, int8_t temperature);
 int AddInfo(str_sensor info[]);
-void print(str_sensor* info, int number);
+void print(str_sensor *info, int number);
 void changeIJ(str_sensor info[], int i, int j);
 
 // Функции статистики по месяцам
