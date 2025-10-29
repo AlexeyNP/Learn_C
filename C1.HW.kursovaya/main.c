@@ -28,16 +28,22 @@ typedef struct sensor {                 // Струтура для сбора д
     uint8_t minute;
     uint8_t hour;
     uint8_t day;
-    uint8_t mounth;
+    uint8_t month;
     uint16_t year;
     int8_t temperature;
 } str_sensor;
 
+// Прототипы функций
+void AddRecord(str_sensor info[], size_t number, uint16_t year, uint8_t month, uint8_t day, uint8_t hour, uint8_t minute, uint8_t second, int8_t temperature);
+int AddInfo(str_sensor info[]);
+void print(str_sensor* info, int number);
+void changeIJ(str_sensor info[], int i, int j);
+
 // Добавление записи с датой, временем и температурой
-void AddRecord(str_sensor info[], size_t number, uint8_t year, uint8_t mounth, uint8_t day,  uint8_t hour, uint8_t minute, uint16_t second, int8_t temperature)
+void AddRecord(str_sensor info[], size_t number, uint16_t year, uint8_t month, uint8_t day, uint8_t hour, uint8_t minute, uint8_t second, int8_t temperature)
 {
     info[number].year = year;
-    info[number].mounth = mounth;
+    info[number].month = month;
     info[number].day = day;
     info[number].hour = hour;
     info[number].minute = minute;
@@ -47,7 +53,7 @@ void AddRecord(str_sensor info[], size_t number, uint8_t year, uint8_t mounth, u
 }
 
 // Добрвление записей в массив
-void AddInfo(str_sensor info[])
+int AddInfo(str_sensor info[])
 {
     int counter = 0;
     AddRecord(info, counter++, 2023, 5, 26, 14, 55, 23, 7);
@@ -64,7 +70,7 @@ void print(str_sensor* info, int number)
     {
         printf("%04d-%02d-%02d %02d:%02d:%02d t=%3d\n",
         info[i].year,
-        info[i].mounth,
+        info[i].month,
         info[i].day,
         info[i].hour,
         info[i].minute,
@@ -73,8 +79,20 @@ void print(str_sensor* info, int number)
     }
 }
 
+// Меняем местами два элемента массива
+void changeIJ(str_sensor info[], int i, int j)
+{
+    str_sensor temp;
+    temp    = info[i];
+    info[i] = info[j];
+    info[j] = temp;
+}
+
 int main(void)
 {
     str_sensor info[SIZE];
-
+    int number=AddInfo(info);
+    changeIJ(info, 1, 2);
+    print(info, number);
+    return 0;
 }
