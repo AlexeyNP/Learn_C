@@ -178,10 +178,10 @@ int8_t yearly_max_temperature(str_sensor info[], int num_records, uint16_t year)
 // Вывод статистики за месяц
 void print_monthly_statistics(str_sensor info[], int num_records, uint8_t month, uint16_t year)
 {
-    printf("\n=== Monthly Statistics for %02d/%04d ===\n", month, year);
+    printf("=== Monthly Statistics for %02d/%04d ===\n", month, year);
     printf("Average temperature: %.2f C\n", monthly_average_temperature(info, num_records, month, year));
-    printf("Minimum temperature: %d°C\n", monthly_min_temperature(info, num_records, month, year));
-    printf("Maximum temperature: %d°C\n", monthly_max_temperature(info, num_records, month, year));
+    printf("Minimum temperature: %d C\n", monthly_min_temperature(info, num_records, month, year));
+    printf("Maximum temperature: %d C\n", monthly_max_temperature(info, num_records, month, year));
     printf("===================================\n\n");
 }
 
