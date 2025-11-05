@@ -189,8 +189,8 @@ void print_monthly_statistics(str_sensor info[], int num_records, uint8_t month,
 void print_yearly_statistics(str_sensor info[], int num_records, uint16_t year)
 {
     printf("=== Yearly Statistics for %04d ===\n", year);
-    printf("Average temperature: %.2f°C\n", yearly_average_temperature(info, num_records, year));
-    printf("Minimum temperature: %d°C\n", yearly_min_temperature(info, num_records, year));
-    printf("Maximum temperature: %d°C\n", yearly_max_temperature(info, num_records, year));
+    printf("Average temperature: %.2f C\n", yearly_average_temperature(info, num_records, year));
+    printf("Minimum temperature: %d C\n", yearly_min_temperature(info, num_records, year));
+    printf("Maximum temperature: %d C\n", yearly_max_temperature(info, num_records, year));
     printf("================================\n\n");
 }
