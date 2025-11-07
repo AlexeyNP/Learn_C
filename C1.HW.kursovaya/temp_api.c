@@ -19,17 +19,17 @@ void AddRecord(str_sensor info[], size_t number, uint16_t year, uint8_t month, u
     }
 }
 
-// Заполняем массив структур данными
+// Заполняем вручную массив структур данными
 int AddInfo(str_sensor info[])
 {
     int counter = 0;
-    AddRecord(info, counter++, 2023, 5, 26, 14, 55, 23, 7);
-    AddRecord(info, counter++, 2024, 7, 3, 9, 35, 21, 22);
-    AddRecord(info, counter++, 2025, 6, 12, 17, 8, 47, 6);
-    AddRecord(info, counter++, 2025, 5, 15, 10, 30, 0, -5);
-    AddRecord(info, counter++, 2025, 5, 20, 14, 0, 0, 15);
-    AddRecord(info, counter++, 2025, 6, 10, 12, 0, 0, 25);
-    AddRecord(info, counter++, 2025, 6, 15, 16, 0, 0, 30);
+    AddRecord(info, counter++, 1998, 5, 26, 14, 55, 23, 7);
+    AddRecord(info, counter++, 1999, 7, 3, 9, 35, 21, 22);
+    AddRecord(info, counter++, 1997, 6, 12, 17, 8, 47, 6);
+    AddRecord(info, counter++, 1998, 5, 15, 10, 30, 0, -5);
+    AddRecord(info, counter++, 1999, 5, 20, 14, 0, 0, 15);
+    AddRecord(info, counter++, 1997, 6, 10, 12, 0, 0, 25);
+    AddRecord(info, counter++, 1998, 6, 15, 16, 0, 0, 30);
     return counter;
 }
 
@@ -42,7 +42,10 @@ int load_from_csv(str_sensor info[], int max_records, const char *filename)
         return -1;
     }
 
-    char line[256];
+// Считываем строки из файла
+// Используем fgets() для считывания строк, пока не достигнем max_records
+// или достигнем конца файла
+char line[256];
     int counter = 0;
 
     // Пропускаем заголовок если есть
@@ -126,9 +129,9 @@ void sort_by_date(str_sensor info[], int num_records)
 
 void print(str_sensor *info, int number)
 {
-    printf("=====================================================\n");
+    printf("========================================\n");
     printf("No  Date       Time     Temperature\n");
-    printf("-----------------------------------------------------\n");
+    printf("----------------------------------------\n");
     for (int i = 0; i < number; i++)
     {
         printf("%-3d %04d-%02d-%02d %02d:%02d:%02d t=%3d C\n",
@@ -141,7 +144,7 @@ void print(str_sensor *info, int number)
                info[i].second,
                info[i].temperature);
     }
-    printf("=====================================================\n\n");
+    printf("========================================\n\n");
 }
 
 // Смена местами I-й и J-й строки массива
@@ -285,7 +288,7 @@ void print_monthly_statistics(str_sensor info[], int num_records, uint8_t month,
     printf("Minimum temperature: %d C\n", min_temp);
     printf("Maximum temperature: %d C\n", max_temp);
     printf("Records count: %d\n", count_monthly_records(info, num_records, month, year));
-    printf("===================================\n\n");
+    printf("========================================\n\n");
 }
 
 // Вывод статистики за год
@@ -300,7 +303,7 @@ void print_yearly_statistics(str_sensor info[], int num_records, uint16_t year)
     printf("Minimum temperature: %d C\n", min_temp);
     printf("Maximum temperature: %d C\n", max_temp);
     printf("Records count: %d\n", count_yearly_records(info, num_records, year));
-    printf("================================\n\n");
+    printf("========================================\n\n");
 }
 
 // Подсчет записей за месяц

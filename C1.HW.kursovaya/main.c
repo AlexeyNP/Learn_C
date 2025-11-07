@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    // Загрузка данных
+    // Загрузка данных из файла
     if (filename)
     {
         number = load_from_csv(info, SIZE, filename);
@@ -78,9 +78,11 @@ int main(int argc, char *argv[])
             return 1;
         }
         printf("Loaded %d records from %s\n", number, filename);
-    }
-    else
-    {
+    
+    // Автоматически печатаем записи после загрузки из файла
+        printf("\nLoaded records:\n");
+        print(info, number);
+    } else {
         number = AddInfo(info);
         printf("Loaded %d demo records\n", number);
     }
@@ -90,6 +92,9 @@ int main(int argc, char *argv[])
     {
         sort_by_date(info, number);
         printf("Records sorted by date and time\n");
+    // Печатаем отсортированные данные после сортировки
+        printf("\nSorted records:\n");
+        print(info, number);
     }
 
     // Печать всех записей если запрошено
@@ -115,7 +120,8 @@ int main(int argc, char *argv[])
                 }
             }
             if (year == 0)
-                year = 2023; // год по умолчанию
+                year = 2025; // год по умолчанию
+                printf("Warning: No data found for month %d, using year %d as default\n", month, year);
         }
         print_monthly_statistics(info, number, month, year);
     }
@@ -171,13 +177,6 @@ int main(int argc, char *argv[])
             }
             print_yearly_statistics(info, number, years[y]);
         }
-    }
-    else
-    {
-        // Статистика по умолчанию (как в исходной версии)
-        print_monthly_statistics(info, number, 5, 2025);
-        print_monthly_statistics(info, number, 6, 2025);
-        print_yearly_statistics(info, number, 2023);
     }
 
     return 0;
