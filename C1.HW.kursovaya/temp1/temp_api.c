@@ -7,16 +7,13 @@
 // Заполняем структуру
 void AddRecord(str_sensor info[], size_t number, uint16_t year, uint8_t month, uint8_t day, uint8_t hour, uint8_t minute, uint8_t second, int8_t temperature)
 {
-    if (number < SIZE)
-    {
-        info[number].year = year;
-        info[number].month = month;
-        info[number].day = day;
-        info[number].hour = hour;
-        info[number].minute = minute;
-        info[number].second = second;
-        info[number].temperature = temperature;
-    }
+    info[number].year = year;
+    info[number].month = month;
+    info[number].day = day;
+    info[number].hour = hour;
+    info[number].minute = minute;
+    info[number].second = second;
+    info[number].temperature = temperature;
 }
 
 // Заполняем массив структур данными
@@ -33,106 +30,12 @@ int AddInfo(str_sensor info[])
     return counter;
 }
 
-// Загрузка данных из CSV файла
-int load_from_csv(str_sensor info[], int max_records, const char *filename)
-{
-    FILE *file = fopen(filename, "r");
-    if (!file)
-    {
-        return -1;
-    }
-
-    char line[256];
-    int counter = 0;
-
-    // Пропускаем заголовок если есть
-    fgets(line, sizeof(line), file);
-
-    while (fgets(line, sizeof(line), file) && counter < max_records)
-    {
-        uint16_t year;
-        uint8_t month, day, hour, minute, second;
-        int8_t temperature;
-
-        if (sscanf(line, "%hu;%hhu;%hhu;%hhu;%hhu;%hhu;%hhd",
-                   &year, &month, &day, &hour, &minute, &second, &temperature) == 7)
-        {
-            AddRecord(info, counter, year, month, day, hour, minute, second, temperature);
-            counter++;
-        }
-    }
-
-    fclose(file);
-    return counter;
-}
-
-// Удаление записи по индексу
-int delete_record(str_sensor info[], int *num_records, int index)
-{
-    if (index < 0 || index >= *num_records)
-    {
-        return -1;
-    }
-
-    for (int i = index; i < *num_records - 1; i++)
-    {
-        info[i] = info[i + 1];
-    }
-
-    (*num_records)--;
-    return 0;
-}
-
-// Функция сравнения для сортировки
-int compare_sensors(const void *a, const void *b)
-{
-    const str_sensor *sensor_a = (const str_sensor *)a;
-    const str_sensor *sensor_b = (const str_sensor *)b;
-
-    // Сравниваем годы
-    if (sensor_a->year != sensor_b->year)
-    {
-        return sensor_a->year - sensor_b->year;
-    }
-    // Сравниваем месяцы
-    if (sensor_a->month != sensor_b->month)
-    {
-        return sensor_a->month - sensor_b->month;
-    }
-    // Сравниваем дни
-    if (sensor_a->day != sensor_b->day)
-    {
-        return sensor_a->day - sensor_b->day;
-    }
-    // Сравниваем часы
-    if (sensor_a->hour != sensor_b->hour)
-    {
-        return sensor_a->hour - sensor_b->hour;
-    }
-    // Сравниваем минуты
-    if (sensor_a->minute != sensor_b->minute)
-    {
-        return sensor_a->minute - sensor_b->minute;
-    }
-    // Сравниваем секунды
-    return sensor_a->second - sensor_b->second;
-}
-
-// Сортировка записей по дате и времени
-void sort_by_date(str_sensor info[], int num_records)
-{
-    qsort(info, num_records, sizeof(str_sensor), compare_sensors);
-}
-
 void print(str_sensor *info, int number)
 {
     printf("=====================================================\n");
-    printf("No  Date       Time     Temperature\n");
-    printf("-----------------------------------------------------\n");
     for (int i = 0; i < number; i++)
     {
-        printf("%-3d %04d-%02d-%02d %02d:%02d:%02d t=%3d C\n",
-               i + 1,
+        printf("%04d-%02d-%02d %02d:%02d:%02d t=%3d\n",
                info[i].year,
                info[i].month,
                info[i].day,
@@ -141,7 +44,6 @@ void print(str_sensor *info, int number)
                info[i].second,
                info[i].temperature);
     }
-    printf("=====================================================\n\n");
 }
 
 // Смена местами I-й и J-й строки массива
@@ -174,7 +76,7 @@ float monthly_average_temperature(str_sensor info[], int num_records, uint8_t mo
 // Поиск минимальной температуры за месяц
 int8_t monthly_min_temperature(str_sensor info[], int num_records, uint8_t month, uint16_t year)
 {
-    int8_t min_temp = 127; // Используем максимальное значение для int8_t
+    int8_t min_temp = 99;
     int found = 0;
 
     for (int i = 0; i < num_records; i++)
@@ -195,7 +97,7 @@ int8_t monthly_min_temperature(str_sensor info[], int num_records, uint8_t month
 // Поиск максимальной температуры за месяц
 int8_t monthly_max_temperature(str_sensor info[], int num_records, uint8_t month, uint16_t year)
 {
-    int8_t max_temp = -128; // Используем минимальное значение для int8_t
+    int8_t max_temp = -99;
     int found = 0;
 
     for (int i = 0; i < num_records; i++)
@@ -234,7 +136,7 @@ float yearly_average_temperature(str_sensor info[], int num_records, uint16_t ye
 // Поиск минимальной температуры за год
 int8_t yearly_min_temperature(str_sensor info[], int num_records, uint16_t year)
 {
-    int8_t min_temp = 127;
+    int8_t min_temp = 99;
     int found = 0;
 
     for (int i = 0; i < num_records; i++)
@@ -255,7 +157,7 @@ int8_t yearly_min_temperature(str_sensor info[], int num_records, uint16_t year)
 // Поиск максимальной температуры за год
 int8_t yearly_max_temperature(str_sensor info[], int num_records, uint16_t year)
 {
-    int8_t max_temp = -128;
+    int8_t max_temp = -99;
     int found = 0;
 
     for (int i = 0; i < num_records; i++)
@@ -276,57 +178,19 @@ int8_t yearly_max_temperature(str_sensor info[], int num_records, uint16_t year)
 // Вывод статистики за месяц
 void print_monthly_statistics(str_sensor info[], int num_records, uint8_t month, uint16_t year)
 {
-    float avg_temp = monthly_average_temperature(info, num_records, month, year);
-    int8_t min_temp = monthly_min_temperature(info, num_records, month, year);
-    int8_t max_temp = monthly_max_temperature(info, num_records, month, year);
-
     printf("=== Monthly Statistics for %02d/%04d ===\n", month, year);
-    printf("Average temperature: %.2f C\n", avg_temp);
-    printf("Minimum temperature: %d C\n", min_temp);
-    printf("Maximum temperature: %d C\n", max_temp);
-    printf("Records count: %d\n", count_monthly_records(info, num_records, month, year));
+    printf("Average temperature: %.2f C\n", monthly_average_temperature(info, num_records, month, year));
+    printf("Minimum temperature: %d C\n", monthly_min_temperature(info, num_records, month, year));
+    printf("Maximum temperature: %d C\n", monthly_max_temperature(info, num_records, month, year));
     printf("===================================\n\n");
 }
 
 // Вывод статистики за год
 void print_yearly_statistics(str_sensor info[], int num_records, uint16_t year)
 {
-    float avg_temp = yearly_average_temperature(info, num_records, year);
-    int8_t min_temp = yearly_min_temperature(info, num_records, year);
-    int8_t max_temp = yearly_max_temperature(info, num_records, year);
-
     printf("=== Yearly Statistics for %04d ===\n", year);
-    printf("Average temperature: %.2f C\n", avg_temp);
-    printf("Minimum temperature: %d C\n", min_temp);
-    printf("Maximum temperature: %d C\n", max_temp);
-    printf("Records count: %d\n", count_yearly_records(info, num_records, year));
+    printf("Average temperature: %.2f C\n", yearly_average_temperature(info, num_records, year));
+    printf("Minimum temperature: %d C\n", yearly_min_temperature(info, num_records, year));
+    printf("Maximum temperature: %d C\n", yearly_max_temperature(info, num_records, year));
     printf("================================\n\n");
-}
-
-// Подсчет записей за месяц
-int count_monthly_records(str_sensor info[], int num_records, uint8_t month, uint16_t year)
-{
-    int count = 0;
-    for (int i = 0; i < num_records; i++)
-    {
-        if (info[i].month == month && info[i].year == year)
-        {
-            count++;
-        }
-    }
-    return count;
-}
-
-// Подсчет записей за год
-int count_yearly_records(str_sensor info[], int num_records, uint16_t year)
-{
-    int count = 0;
-    for (int i = 0; i < num_records; i++)
-    {
-        if (info[i].year == year)
-        {
-            count++;
-        }
-    }
-    return count;
 }

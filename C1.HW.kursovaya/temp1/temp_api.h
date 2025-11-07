@@ -3,44 +3,36 @@
 
 #include <stdint.h>
 
-#define SIZE 1000 // Размер для работы с файлами
+#define SIZE 30
 
 #pragma pack(push, 1)
 typedef struct sensor
 {
-    uint16_t year;
-    uint8_t month;
-    uint8_t day;
-    uint8_t hour;
-    uint8_t minute;
     uint8_t second;
+    uint8_t minute;
+    uint8_t hour;
+    uint8_t day;
+    uint8_t month;
+    uint16_t year;
     int8_t temperature;
 } str_sensor;
 #pragma pack(pop)
 
-// Функции работы с данными
+// Функции для работы с данными
 void AddRecord(str_sensor info[], size_t number, uint16_t year, uint8_t month, uint8_t day, uint8_t hour, uint8_t minute, uint8_t second, int8_t temperature);
 int AddInfo(str_sensor info[]);
-int load_from_csv(str_sensor info[], int max_records, const char *filename);
-int delete_record(str_sensor info[], int *num_records, int index);
 void print(str_sensor *info, int number);
 void changeIJ(str_sensor info[], int i, int j);
-
-// Функции сортировки
-void sort_by_date(str_sensor info[], int num_records);
-int compare_sensors(const void *a, const void *b);
 
 // Функции статистики по месяцам
 float monthly_average_temperature(str_sensor info[], int num_records, uint8_t month, uint16_t year);
 int8_t monthly_min_temperature(str_sensor info[], int num_records, uint8_t month, uint16_t year);
 int8_t monthly_max_temperature(str_sensor info[], int num_records, uint8_t month, uint16_t year);
-int count_monthly_records(str_sensor info[], int num_records, uint8_t month, uint16_t year);
 
 // Функции статистики за год
 float yearly_average_temperature(str_sensor info[], int num_records, uint16_t year);
 int8_t yearly_min_temperature(str_sensor info[], int num_records, uint16_t year);
 int8_t yearly_max_temperature(str_sensor info[], int num_records, uint16_t year);
-int count_yearly_records(str_sensor info[], int num_records, uint16_t year);
 
 // Функции вывода статистики
 void print_monthly_statistics(str_sensor info[], int num_records, uint8_t month, uint16_t year);
