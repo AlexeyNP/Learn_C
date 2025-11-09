@@ -78,11 +78,13 @@ int main(int argc, char *argv[])
             return 1;
         }
         printf("Loaded %d records from %s\n", number, filename);
-    
-    // Автоматически печатаем записи после загрузки из файла
+
+        // Печатаем записи, которые загрузили из файла
         printf("\nLoaded records:\n");
         print(info, number);
-    } else {
+    }
+    else
+    {
         number = AddInfo(info);
         printf("Loaded %d demo records\n", number);
     }
@@ -92,7 +94,7 @@ int main(int argc, char *argv[])
     {
         sort_by_date(info, number);
         printf("Records sorted by date and time\n");
-    // Печатаем отсортированные данные после сортировки
+        // Печатаем отсортированные данные после сортировки
         printf("\nSorted records:\n");
         print(info, number);
     }
@@ -120,15 +122,55 @@ int main(int argc, char *argv[])
                 }
             }
             if (year == 0)
-                year = 2025; // год по умолчанию
-                printf("Warning: No data found for month %d, using year %d as default\n", month, year);
+                year = 2025; // если не указан год, используем год по умолчанию
+            printf("Warning: No data found for month %d, using year %d as default\n", month, year);
         }
-        print_monthly_statistics(info, number, month, year);
+        // Вывод статистики по месяцу
+        // print_monthly_statistics(info, number, month, year);
+
+        // Проверяем есть ли данные для этого месяца и года
+        int has_data = 0;
+        for (int i = 0; i < number; i++)
+        {
+            if (info[i].month == month && info[i].year == year)
+            {
+                has_data = 1;
+                break;
+            }
+        }
+
+        // Выводим статистику, если есть данные
+        if (has_data)
+        {
+            print_monthly_statistics(info, number, month, year);
+        }
+        else
+        {
+            printf("No data found for month %d, year %d\n", month, year);
+        }
     }
     else if (year > 0)
     {
         // Статистика за год
-        print_yearly_statistics(info, number, year);
+        // Проверяем есть ли данные для этого года
+        int has_data = 0;
+        for (int i = 0; i < number; i++)
+        {
+            if (info[i].year == year)
+            {
+                has_data = 1;
+                break;
+            }
+        }
+
+        if (has_data)
+        {
+            print_yearly_statistics(info, number, year);
+        }
+        else
+        {
+            printf("No data found for year %d\n", year);
+        }
     }
     else if (show_all)
     {
@@ -155,27 +197,79 @@ int main(int argc, char *argv[])
             }
         }
 
-        // Выводим статистику по каждому году и месяцу
-        for (int y = 0; y < year_count; y++)
+        if (year_count == 0)
         {
-            printf("\nYear: %d\n", years[y]);
-            for (int m = 1; m <= 12; m++)
+            printf("No data available for statistics\n");
+        }
+        else
+        {
+            // Выводим статистику по каждому году и месяцу
+            for (int y = 0; y < year_count; y++)
             {
-                int has_data = 0;
-                for (int i = 0; i < number; i++)
+                printf("\nYear: %d\n", years[y]);
+                for (int m = 1; m <= 12; m++)
                 {
-                    if (info[i].year == years[y] && info[i].month == m)
+                    int has_data = 0;
+                    for (int i = 0; i < number; i++)
                     {
-                        has_data = 1;
-                        break;
+                        if (info[i].year == years[y] && info[i].month == m)
+                        {
+                            has_data = 1;
+                            break;
+                        }
+                    }
+                    if (has_data)
+                    {
+                        print_monthly_statistics(info, number, m, years[y]);
                     }
                 }
-                if (has_data)
-                {
-                    print_monthly_statistics(info, number, m, years[y]);
-                }
+                print_yearly_statistics(info, number, years[y]);
             }
-            print_yearly_statistics(info, number, years[y]);
+        }
+    }
+    else
+    {
+        // Статистика по умолчанию (как в исходной версии)
+        printf("=== DEFAULT STATISTICS ===\n");
+
+        // Проверяем наличие данных для статистики по умолчанию
+        int has_may_2025 = 0, has_june_2025 = 0, has_2025 = 0;
+
+        for (int i = 0; i < number; i++)
+        {
+            if (info[i].year == 2025 && info[i].month == 5)
+                has_may_2025 = 1;
+            if (info[i].year == 2025 && info[i].month == 6)
+                has_june_2025 = 1;
+            if (info[i].year == 2025)
+                has_2025 = 1;
+        }
+
+        if (has_may_2025)
+        {
+            print_monthly_statistics(info, number, 5, 2025);
+        }
+        else
+        {
+            printf("No data for May 2025\n");
+        }
+
+        if (has_june_2025)
+        {
+            print_monthly_statistics(info, number, 6, 2025);
+        }
+        else
+        {
+            printf("No data for June 2025\n");
+        }
+
+        if (has_2025)
+        {
+            print_yearly_statistics(info, number, 2025);
+        }
+        else
+        {
+            printf("No data for year 2025\n");
         }
     }
 

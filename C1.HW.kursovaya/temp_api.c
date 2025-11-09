@@ -42,30 +42,67 @@ int load_from_csv(str_sensor info[], int max_records, const char *filename)
         return -1;
     }
 
-// Считываем строки из файла
-// Используем fgets() для считывания строк, пока не достигнем max_records
-// или достигнем конца файла
+// Считываем строки из файла filename.csv
+// Используем fgets() для считывания строк в массив line[256 байт], пока не достигнем max_records
+// или достигнем конца файла.
 char line[256];
     int counter = 0;
-
-    // Пропускаем заголовок если есть
-    fgets(line, sizeof(line), file);
-
+   
     while (fgets(line, sizeof(line), file) && counter < max_records)
     {
+        // Пропускаем пустые строки
+        if (strlen(line) <= 1) continue;
+
         uint16_t year;
         uint8_t month, day, hour, minute, second;
         int8_t temperature;
 
-        if (sscanf(line, "%hu;%hhu;%hhu;%hhu;%hhu;%hhu;%hhd",
-                   &year, &month, &day, &hour, &minute, &second, &temperature) == 7)
-        {
-            AddRecord(info, counter, year, month, day, hour, minute, second, temperature);
-            counter++;
+// Пробуем разные форматы CSV
+        int parsed = sscanf(line, "%hu;%hhu;%hhu;%hhu;%hhu;%hhu;%hhd", 
+                   &year, &month, &day, &hour, &minute, &second, &temperature);
+        
+        if (parsed != 7) {
+            // Пробуем с запятыми
+            parsed = sscanf(line, "%hu,%hhu,%hhu,%hhu,%hhu,%hhu,%hhd", 
+                   &year, &month, &day, &hour, &minute, &second, &temperature);
         }
+        
+        if (parsed != 7) {
+            // Пробуем с пробелами
+            parsed = sscanf(line, "%hu %hhu %hhu %hhu %hhu %hhu %hhd", 
+                   &year, &month, &day, &hour, &minute, &second, &temperature);
+        }
+        
+        if (parsed == 7) {
+            // Проверяем корректность данных
+            if (month >= 1 && month <= 12 && day >= 1 && day <= 31 && 
+                hour <= 23 && minute <= 59 && second <= 59) {
+                AddRecord(info, counter, year, month, day, hour, minute, second, temperature);
+                printf("Record %d: %04d-%02d-%02d %02d:%02d:%02d t=%3d C\n", 
+                       counter + 1, year, month, day, hour, minute, second, temperature);
+                counter++;
+            } else {
+                printf("Warning: Skipping invalid data in line: %s", line);
+            }
+        } else {
+            // Пропускаем строку заголовка если есть
+            if (strstr(line, "Year") == NULL && strstr(line, "year") == NULL &&
+                strstr(line, "YEAR") == NULL) {
+                printf("Warning: Could not parse line %d: %s", counter + 1, line);
+            }
+        }
+    }
+    
+    if (ferror(file)) {
+        perror("Error reading file");
+        fclose(file);
+        return -1;
     }
 
     fclose(file);
+    if (counter == 0) {
+        printf("Warning: No valid records found in file\n");
+    }
     return counter;
 }
 
@@ -129,6 +166,11 @@ void sort_by_date(str_sensor info[], int num_records)
 
 void print(str_sensor *info, int number)
 {
+    if (number == 0) {
+        printf("No records to display\n");
+        return;
+    }
+    
     printf("========================================\n");
     printf("No  Date       Time     Temperature\n");
     printf("----------------------------------------\n");
@@ -145,6 +187,7 @@ void print(str_sensor *info, int number)
                info[i].temperature);
     }
     printf("========================================\n\n");
+    printf("Total records: %d\n\n", number);
 }
 
 // Смена местами I-й и J-й строки массива
