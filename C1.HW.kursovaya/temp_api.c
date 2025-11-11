@@ -97,7 +97,7 @@ int load_from_csv(str_sensor info[], int max_records, const char *filename)
                        year, month, day, hour, minute, second, temperature);
             }
         } else {
-            printf("Warning: Could not parse line %d (parsed %d/7 fields): %s\n", line_num, parsed, line);
+            printf("Warning: Could not add record from line %d (expected %d/7 fields): %s\n", line_num, parsed, line);
         }
     }
     

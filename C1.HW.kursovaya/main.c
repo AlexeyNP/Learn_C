@@ -80,8 +80,9 @@ int main(int argc, char *argv[])
         printf("Loaded %d records from %s\n", number, filename);
 
         // Печатаем записи, которые загрузили из файла
-        printf("\nLoaded records:\n");
-        print(info, number);
+        //printf("\nLoaded records: %d\n", number);
+        //print(number);
+        //print(info, number);
     }
     else
     {
@@ -122,7 +123,7 @@ int main(int argc, char *argv[])
                 }
             }
             if (year == 0)
-                year = 2025; // если не указан год, используем год по умолчанию
+                year = 2021; // если не указан год, используем год по умолчанию
             printf("Warning: No data found for month %d, using year %d as default\n", month, year);
         }
         // Вывод статистики по месяцу
